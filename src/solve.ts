@@ -1,6 +1,6 @@
 import type { SolveResult } from "./types";
 
-export const DEFAULT_STAMPS: number[] = [0.43, 0.54, 0.75, 0.46, 0.15, 0.17, 0.52, 0.55];
+export const DEFAULT_STAMPS: number[] = [0.43, 0.54, 0.75, 0.46, 0.15, 0.17, 0.2, 0.55, 0.1];
 
 export function solve(stamps: number[], target: number): SolveResult | null {
   if (target <= 0) return { total: 0, count: 0, used: {} };

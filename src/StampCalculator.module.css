@@ -27,13 +27,79 @@
   margin-top: 20px;
 }
 
-.stampTextarea {
-  width: 100%;
-  padding: 8px;
+.stampTiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.stampTile {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #ede9fe;
+  border: 1px solid #a5b4fc;
+  border-radius: 8px;
+  padding: 5px 10px;
   font-size: 14px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  resize: vertical;
+  font-weight: 600;
+}
+
+.stampTileRemove {
+  background: none;
+  border: none;
+  color: #a78bfa;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  padding: 0;
+  margin-left: 2px;
+}
+
+.stampTileRemove:hover {
+  color: #f87171;
+}
+
+.stampAddTile {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1.5px dashed #a5b4fc;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
+.stampAddInput {
+  width: 40px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background: transparent;
+}
+
+.stampAddInput::-webkit-outer-spin-button,
+.stampAddInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.stampAddInput[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.stampAddBtn {
+  background: none;
+  border: none;
+  color: #4f46e5;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0 2px;
 }
 
 /* Picked section */

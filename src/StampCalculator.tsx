@@ -1,11 +1,12 @@
-import { useMemo, useState } from "react";
+import { useState, useMemo } from "react";
 import { DEFAULT_STAMPS, fmt, solve } from "./solve";
 import { StampChip } from "./StampChip";
 import type { PickedStamp, Result } from "./types";
 import s from "./StampCalculator.module.css";
 
 export default function StampCalculator(): JSX.Element {
-  const [stampInput, setStampInput] = useState<string>(DEFAULT_STAMPS.join(", "));
+  const [stamps, setStamps] = useState<number[]>(DEFAULT_STAMPS.map(v => Math.round(v * 100)));
+  const [stampAddVal, setStampAddVal] = useState<string>("");
   const [postage, setPostage] = useState<string>("");
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState<string>("");
@@ -13,12 +14,18 @@ export default function StampCalculator(): JSX.Element {
   const [pickVal, setPickVal] = useState<string>("");
   const [pickCount, setPickCount] = useState<number>(1);
 
-  const parsedStamps = useMemo<number[]>(() =>
-    [...new Set(
-      stampInput.split(/[\s,]+/).map(st => Math.round(parseFloat(st) * 100)).filter(n => !isNaN(n) && n > 0)
-    )].sort((a, b) => a - b),
-    [stampInput]
-  );
+  const addStamp = (): void => {
+    const v = Math.round(parseFloat(stampAddVal) * 100);
+    if (isNaN(v) || v <= 0) return;
+    setStamps(prev => prev.includes(v) ? prev : [...prev, v].sort((a, b) => a - b));
+    setStampAddVal("");
+    setResult(null);
+  };
+
+  const removeStamp = (v: number): void => {
+    setStamps(prev => prev.filter(d => d !== v));
+    setResult(null);
+  };
 
   const pickedTotal = useMemo<number>(
     () => picked.reduce((sum, p) => sum + p.value * p.count, 0),
@@ -59,7 +66,7 @@ export default function StampCalculator(): JSX.Element {
   const calculate = (): void => {
     setError("");
     setResult(null);
-    if (parsedStamps.length === 0) { setError("Please enter at least one stamp value."); return; }
+    if (stamps.length === 0) { setError("Please enter at least one stamp value."); return; }
     const target = Math.round(parseFloat(postage) * 100);
     if (isNaN(target) || target <= 0) { setError("Please enter a valid postage amount."); return; }
 
@@ -70,7 +77,7 @@ export default function StampCalculator(): JSX.Element {
       return;
     }
 
-    const res = solve(parsedStamps, remainder);
+    const res = solve(stamps, remainder);
     if (!res) { setError("No solution found with these stamp values."); return; }
     setResult({ ...res, target, remainder });
   };
@@ -82,16 +89,27 @@ export default function StampCalculator(): JSX.Element {
       <h2 className={s.title}>Stamp Calculator</h2>
       <p className={s.subtitle}>Find the minimum postage that covers your required amount.</p>
 
-      <label className={s.label}>
-        Available Stamp Values ($, comma or space separated)
-      </label>
-      <textarea
-        className={s.stampTextarea}
-        value={stampInput}
-        onChange={e => { setStampInput(e.target.value); setResult(null); }}
-        rows={2}
-        placeholder="e.g. 0.15, 0.17, 0.43, 0.55"
-      />
+      <label className={s.label}>Available Stamp Values</label>
+      <div className={s.stampTiles}>
+        {stamps.map(v => (
+          <div key={v} className={s.stampTile}>
+            <span>{fmt(v)}</span>
+            <button onClick={() => removeStamp(v)} className={s.stampTileRemove}>×</button>
+          </div>
+        ))}
+        <div className={s.stampAddTile}>
+          <input
+            type="number"
+            value={stampAddVal}
+            onChange={e => setStampAddVal(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && addStamp()}
+            placeholder="0.00"
+            min={0.01} step={0.01}
+            className={s.stampAddInput}
+          />
+          <button onClick={addStamp} className={s.stampAddBtn}>+</button>
+        </div>
+      </div>
 
       <div className={s.pickedSection}>
         <div className={s.pickedHeader}>Stamps already picked</div>
