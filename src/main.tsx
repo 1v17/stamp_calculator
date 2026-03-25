@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import StampCalculator from "../stamp_calculator";
+import StampCalculator from "./StampCalculator";
 import "./styles.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
