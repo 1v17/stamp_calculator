@@ -3,7 +3,11 @@ import type { SolveResult } from "./types";
 export const DEFAULT_STAMPS: number[] = [0.43, 0.54, 0.75, 0.46, 0.15, 0.17, 0.2, 0.55, 0.1];
 
 export function solve(stamps: number[], target: number): SolveResult | null {
+  if (!Number.isFinite(target) || !Number.isInteger(target)) return null;
   if (target <= 0) return { total: 0, count: 0, used: {} };
+  if (stamps.length === 0) return null;
+  if (stamps.some(st => !Number.isFinite(st) || !Number.isInteger(st) || st <= 0)) return null;
+
   const maxStamp = Math.max(...stamps);
   const limit = target + maxStamp;
   const dp: number[] = new Array(limit + 1).fill(Infinity);

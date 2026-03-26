@@ -40,6 +40,33 @@ describe('solve - target ≤ 0', () => {
 });
 
 // ---------------------------------------------------------------------------
+// solve - invalid input validation
+// ---------------------------------------------------------------------------
+describe('solve - invalid input', () => {
+  it('returns null for empty stamps array', () => {
+    expect(solve([], 25)).toBeNull();
+  });
+
+  it('returns null when stamps include non-positive values', () => {
+    expect(solve([25, 0], 25)).toBeNull();
+    expect(solve([25, -5], 25)).toBeNull();
+  });
+
+  it('returns null when stamps include non-integer values', () => {
+    expect(solve([25, 10.5], 25)).toBeNull();
+  });
+
+  it('returns null for non-integer target', () => {
+    expect(solve([25, 10], 12.5)).toBeNull();
+  });
+
+  it('returns null for non-finite target', () => {
+    expect(solve([25, 10], Number.NaN)).toBeNull();
+    expect(solve([25, 10], Number.POSITIVE_INFINITY)).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
 // solve — exact matches
 // ---------------------------------------------------------------------------
 describe('solve - exact matches', () => {
