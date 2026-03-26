@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/jest-globals';
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import StampCalculator from '../StampCalculator';
 import { DEFAULT_STAMPS } from '../solve';
@@ -235,8 +235,7 @@ describe('StampCalculator - updatePickedCount', () => {
     const pickedQtyInput = qtyInputs.find(
       (el) => (el as HTMLInputElement).value === '1' && !(el as HTMLInputElement).placeholder,
     )!;
-    await user.clear(pickedQtyInput);
-    await user.type(pickedQtyInput, '2');
+    fireEvent.change(pickedQtyInput, { target: { value: '2' } });
     const pickedRow = pickedQtyInput.closest('div');
     expect(pickedRow).not.toBeNull();
     expect(within(pickedRow as HTMLElement).getByText(/=\s*\$0\.40/)).toBeInTheDocument();
