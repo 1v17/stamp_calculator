@@ -168,7 +168,11 @@ export default function StampCalculator(): JSX.Element {
         <button onClick={calculate} className={s.calcBtn}>Calculate</button>
       </div>
 
-      {error && <div className={s.error}>{error}</div>}
+      {error && (
+        <div className={s.error} role="alert" aria-live="assertive">
+          {error}
+        </div>
+      )}
 
       {result && (
         <div className={s.result}>
