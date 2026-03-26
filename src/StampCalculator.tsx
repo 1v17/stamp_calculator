@@ -137,7 +137,11 @@ export default function StampCalculator(): JSX.Element {
                   <span className={s.pickedSep}>×</span>
                   <input
                     type="number" value={p.count} min={1}
-                    onChange={e => updatePickedCount(p.value, parseInt(e.target.value))}
+                    onChange={e => {
+                      const raw = e.target.value;
+                      const nextCount = Math.trunc(Number(raw));
+                      updatePickedCount(p.value, isNaN(nextCount) ? 0 : nextCount);
+                    }}
                     className={s.qtyInput}
                   />
                   <span className={s.pickedLineTotal}>= {fmt(p.value * p.count)}</span>
