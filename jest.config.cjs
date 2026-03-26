@@ -7,6 +7,7 @@ module.exports = {
         jsx: 'react-jsx',
         module: 'CommonJS',
         moduleResolution: 'Node',
+        esModuleInterop: true,
       },
     }],
   },

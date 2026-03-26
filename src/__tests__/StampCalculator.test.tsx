@@ -17,7 +17,7 @@ function setup() {
 // ---------------------------------------------------------------------------
 // Initial render
 // ---------------------------------------------------------------------------
-describe('StampCalculator – initial render', () => {
+describe('StampCalculator - initial render', () => {
   it('shows the heading', () => {
     setup();
     expect(screen.getByText('Stamp Calculator')).toBeInTheDocument();
@@ -25,7 +25,7 @@ describe('StampCalculator – initial render', () => {
 
   it('renders all default stamp tiles', () => {
     setup();
-    // Each tile has a remove button labelled "×"; count must equal DEFAULT_STAMPS.length
+    // Each tile has a remove button labelled "x"; count must equal DEFAULT_STAMPS.length
     const removeBtns = screen.getAllByRole('button', { name: '×' });
     expect(removeBtns.length).toBe(DEFAULT_STAMPS.length);
   });
@@ -54,7 +54,7 @@ describe('StampCalculator – initial render', () => {
 // ---------------------------------------------------------------------------
 // addStamp
 // ---------------------------------------------------------------------------
-describe('StampCalculator – addStamp', () => {
+describe('StampCalculator - addStamp', () => {
   it('adds a new stamp tile when + is clicked', async () => {
     const { user } = setup();
     const input = screen.getByPlaceholderText('0.00');
@@ -108,8 +108,8 @@ describe('StampCalculator – addStamp', () => {
 // ---------------------------------------------------------------------------
 // removeStamp
 // ---------------------------------------------------------------------------
-describe('StampCalculator – removeStamp', () => {
-  it('removes a stamp when its × button is clicked', async () => {
+describe('StampCalculator - removeStamp', () => {
+  it('removes a stamp when its x button is clicked', async () => {
     const { user } = setup();
     // Add a unique stamp so we can target it
     const addInput = screen.getByPlaceholderText('0.00');
@@ -138,13 +138,14 @@ describe('StampCalculator – removeStamp', () => {
 // ---------------------------------------------------------------------------
 // addPicked
 // ---------------------------------------------------------------------------
-describe('StampCalculator – addPicked', () => {
+describe('StampCalculator - addPicked', () => {
   it('adds a picked stamp with default qty 1', async () => {
     const { user } = setup();
     const valueInput = screen.getByPlaceholderText(/value.*0\.17/i);
     await user.type(valueInput, '0.43');
     await user.click(screen.getByRole('button', { name: /^add$/i }));
-    expect(screen.getByText('$0.43')).toBeInTheDocument();
+    // $0.43 is also a default stamp tile, so there are now >1 occurrences
+    expect(screen.getAllByText('$0.43').length).toBeGreaterThan(1);
   });
 
   it('adds a picked stamp with custom qty', async () => {
@@ -155,7 +156,7 @@ describe('StampCalculator – addPicked', () => {
     await user.type(qtyInput, '3');
     await user.type(valueInput, '0.20');
     await user.click(screen.getByRole('button', { name: /^add$/i }));
-    expect(screen.getByText('$0.60')).toBeInTheDocument(); // line total: 0.20 × 3
+    expect(screen.getByText(/subtotal:\s*\$0\.60/i)).toBeInTheDocument(); // line total: 0.20 x 3
   });
 
   it('merges count when the same value is added again', async () => {
@@ -165,8 +166,8 @@ describe('StampCalculator – addPicked', () => {
     await user.click(screen.getByRole('button', { name: /^add$/i }));
     await user.type(valueInput, '0.43');
     await user.click(screen.getByRole('button', { name: /^add$/i }));
-    // Line total should now be 2 × 0.43 = 0.86
-    expect(screen.getByText('$0.86')).toBeInTheDocument();
+    // Line total should now be 2 x 0.43 = 0.86
+    expect(screen.getByText(/subtotal:\s*\$0\.86/i)).toBeInTheDocument();
   });
 
   it('ignores zero / invalid value', async () => {
@@ -189,17 +190,17 @@ describe('StampCalculator – addPicked', () => {
 // ---------------------------------------------------------------------------
 // removePicked
 // ---------------------------------------------------------------------------
-describe('StampCalculator – removePicked', () => {
+describe('StampCalculator - removePicked', () => {
   async function addOnePicked(user: ReturnType<typeof userEvent.setup>, val = '0.43') {
     const valueInput = screen.getByPlaceholderText(/value.*0\.17/i);
     await user.type(valueInput, val);
     await user.click(screen.getByRole('button', { name: /^add$/i }));
   }
 
-  it('removes the picked stamp when its × is clicked', async () => {
+  it('removes the picked stamp when its x is clicked', async () => {
     const { user } = setup();
     await addOnePicked(user, '0.43');
-    // The × inside pickedItem removes the picked stamp
+    // The x inside pickedItem removes the picked stamp
     const pickedSection = screen.getByText(/subtotal/i).closest('div')!.parentElement!;
     await user.click(within(pickedSection).getByRole('button', { name: '×' }));
     expect(screen.getByText(/no stamps picked yet/i)).toBeInTheDocument();
@@ -222,7 +223,7 @@ describe('StampCalculator – removePicked', () => {
 // ---------------------------------------------------------------------------
 // updatePickedCount
 // ---------------------------------------------------------------------------
-describe('StampCalculator – updatePickedCount', () => {
+describe('StampCalculator - updatePickedCount', () => {
   it('updates the line total when qty is changed', async () => {
     const { user } = setup();
     const valueInput = screen.getByPlaceholderText(/value.*0\.17/i);
@@ -232,11 +233,13 @@ describe('StampCalculator – updatePickedCount', () => {
     // The qty input inside the picked list has value 1; change to 2
     const qtyInputs = screen.getAllByRole('spinbutton');
     const pickedQtyInput = qtyInputs.find(
-      (el) => (el as HTMLInputElement).value === '1' && el.closest('div[class]'),
+      (el) => (el as HTMLInputElement).value === '1' && !(el as HTMLInputElement).placeholder,
     )!;
     await user.clear(pickedQtyInput);
     await user.type(pickedQtyInput, '2');
-    expect(screen.getByText('$0.40')).toBeInTheDocument();
+    const pickedRow = pickedQtyInput.closest('div');
+    expect(pickedRow).not.toBeNull();
+    expect(within(pickedRow as HTMLElement).getByText(/=\s*\$0\.40/)).toBeInTheDocument();
   });
 
   it('removes the stamp when qty is set to 0', async () => {
@@ -247,7 +250,7 @@ describe('StampCalculator – updatePickedCount', () => {
 
     const qtyInputs = screen.getAllByRole('spinbutton');
     const pickedQtyInput = qtyInputs.find(
-      (el) => (el as HTMLInputElement).value === '1' && el.closest('div[class]'),
+      (el) => (el as HTMLInputElement).value === '1' && !(el as HTMLInputElement).placeholder,
     )!;
     await user.clear(pickedQtyInput);
     await user.type(pickedQtyInput, '0');
@@ -258,7 +261,7 @@ describe('StampCalculator – updatePickedCount', () => {
 // ---------------------------------------------------------------------------
 // calculate — error states
 // ---------------------------------------------------------------------------
-describe('StampCalculator – calculate errors', () => {
+describe('StampCalculator - calculate errors', () => {
   it('shows error when postage is empty', async () => {
     const { user } = setup();
     await user.click(screen.getByRole('button', { name: /calculate/i }));
@@ -298,7 +301,7 @@ describe('StampCalculator – calculate errors', () => {
 // ---------------------------------------------------------------------------
 // calculate — result (no picked stamps)
 // ---------------------------------------------------------------------------
-describe('StampCalculator – calculate result (no picked)', () => {
+describe('StampCalculator - calculate result (no picked)', () => {
   it('shows the result panel after calculating', async () => {
     const { user } = setup();
     await user.type(screen.getByPlaceholderText(/e\.g\. 3\.65/i), '0.43');
@@ -349,7 +352,7 @@ describe('StampCalculator – calculate result (no picked)', () => {
 // ---------------------------------------------------------------------------
 // calculate — picked stamps already cover postage
 // ---------------------------------------------------------------------------
-describe('StampCalculator – picked stamps cover postage', () => {
+describe('StampCalculator - picked stamps cover postage', () => {
   it('shows "already cover" message when picked >= postage', async () => {
     const { user } = setup();
     // Add a 0.50 picked stamp
@@ -376,7 +379,7 @@ describe('StampCalculator – picked stamps cover postage', () => {
 // ---------------------------------------------------------------------------
 // calculate — picked + needed
 // ---------------------------------------------------------------------------
-describe('StampCalculator – picked + additional needed', () => {
+describe('StampCalculator - picked + additional needed', () => {
   it('shows "Already picked" and "Still needed" sections', async () => {
     const { user } = setup();
     // Pick a 0.20 stamp
@@ -387,7 +390,7 @@ describe('StampCalculator – picked + additional needed', () => {
     await user.type(screen.getByPlaceholderText(/e\.g\. 3\.65/i), '0.50');
     await user.click(screen.getByRole('button', { name: /calculate/i }));
 
-    expect(screen.getByText(/already picked/i)).toBeInTheDocument();
+    expect(screen.getByText(/already picked \(/i)).toBeInTheDocument();
     expect(screen.getByText(/still needed/i)).toBeInTheDocument();
   });
 
