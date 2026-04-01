@@ -122,6 +122,11 @@
   gap: 8px;
   margin-bottom: 10px;
   align-items: center;
+  width: 100%;
+}
+
+.addRow > * {
+  min-width: 0;
 }
 
 .input {
@@ -129,6 +134,17 @@
   font-size: 14px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+@media (max-width: 420px) {
+  .addRow {
+    flex-wrap: wrap;
+  }
+
+  .addBtn {
+    width: 100%;
+  }
 }
 
 .addBtn {
@@ -209,6 +225,11 @@
 .postageRow {
   display: flex;
   gap: 8px;
+  width: 100%;
+}
+
+.postageRow > * {
+  min-width: 0;
 }
 
 .postageInput {
@@ -217,6 +238,7 @@
   font-size: 16px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 .calcBtn {
@@ -228,6 +250,16 @@
   font-size: 15px;
   cursor: pointer;
   font-weight: 600;
+}
+
+@media (max-width: 420px) {
+  .postageRow {
+    flex-wrap: wrap;
+  }
+
+  .calcBtn {
+    width: 100%;
+  }
 }
 
 /* Error */
