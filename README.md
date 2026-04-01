@@ -1,6 +1,8 @@
 # Stamp Calculator
 
-A React + TypeScript stamp calculator that helps you determine the minimum additional stamps needed to meet a required postage amount.
+A React + TypeScript stamp calculator that helps you determine the minimum additional stamps needed to meet a required postage amount. You can use it [here](https://stamp-calculator.pages.dev/).
+
+![Stamp Calculator interface showing various stamp values. Users can input selected stamps and required postage, then click "Calculate" for results.](resources/stamp_calculator_demo.png)
 
 The calculator supports:
 - Entering available stamp denominations
