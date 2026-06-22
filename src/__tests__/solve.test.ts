@@ -185,8 +185,8 @@ describe('DEFAULT_STAMPS', () => {
     expect(DEFAULT_STAMPS.length).toBeGreaterThan(0);
   });
 
-  it('has 9 entries', () => {
-    expect(DEFAULT_STAMPS).toHaveLength(9);
+  it('has 11 entries', () => {
+    expect(DEFAULT_STAMPS).toHaveLength(11);
   });
 
   it('all entries are positive numbers', () => {
