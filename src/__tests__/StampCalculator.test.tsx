@@ -72,10 +72,10 @@ describe('StampCalculator - addStamp', () => {
 
   it('does not add a duplicate stamp value', async () => {
     const { user } = setup();
-    // 0.43 is already a default stamp
+    // 0.45 is already a default stamp
     const before = screen.getAllByRole('button', { name: '×' }).length;
     const input = screen.getByPlaceholderText('0.00');
-    await user.type(input, '0.43');
+    await user.type(input, '0.45');
     await user.click(screen.getByRole('button', { name: '+' }));
     expect(screen.getAllByRole('button', { name: '×' }).length).toBe(before);
   });
@@ -142,10 +142,10 @@ describe('StampCalculator - addPicked', () => {
   it('adds a picked stamp with default qty 1', async () => {
     const { user } = setup();
     const valueInput = screen.getByPlaceholderText(/value.*0\.17/i);
-    await user.type(valueInput, '0.43');
+    await user.type(valueInput, '0.45');
     await user.click(screen.getByRole('button', { name: /^add$/i }));
-    // $0.43 is also a default stamp tile, so there are now >1 occurrences
-    expect(screen.getAllByText('$0.43').length).toBeGreaterThan(1);
+    // $0.45 is also a default stamp tile, so there are now >1 occurrences
+    expect(screen.getAllByText('$0.45').length).toBeGreaterThan(1);
   });
 
   it('adds a picked stamp with custom qty', async () => {
@@ -324,9 +324,9 @@ describe('StampCalculator - calculate result (no picked)', () => {
 
   it('shows needed stamp chips in result', async () => {
     const { user } = setup();
-    await user.type(screen.getByPlaceholderText(/e\.g\. 3\.65/i), '0.43');
+    await user.type(screen.getByPlaceholderText(/e\.g\. 3\.65/i), '0.45');
     await user.click(screen.getByRole('button', { name: /calculate/i }));
-    // One 43¢ stamp chip should appear in the result
+    // One 45¢ stamp chip should appear in the result
     expect(screen.getByText(/still needed/i)).toBeInTheDocument();
   });
 

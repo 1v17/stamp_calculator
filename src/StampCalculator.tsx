@@ -27,6 +27,11 @@ export default function StampCalculator(): JSX.Element {
     setResult(null);
   };
 
+  const clearStamps = (): void => {
+    setStamps([]);
+    setResult(null);
+  };
+
   const pickedTotal = useMemo<number>(
     () => picked.reduce((sum, p) => sum + p.value * p.count, 0),
     [picked]
@@ -89,7 +94,14 @@ export default function StampCalculator(): JSX.Element {
       <h2 className={s.title}>Stamp Calculator</h2>
       <p className={s.subtitle}>Find the minimum postage that covers your required amount.</p>
 
-      <label className={s.label}>Available Stamp Values</label>
+      <div className={s.labelRow}>
+        <label className={s.label}>Available Stamp Values</label>
+        {stamps.length > 0 && (
+          <button onClick={clearStamps} className={s.clearBtn}>
+            Clear all
+          </button>
+        )}
+      </div>
       <div className={s.stampTiles}>
         {stamps.map(v => (
           <div key={v} className={s.stampTile}>

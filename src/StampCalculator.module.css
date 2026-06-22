@@ -20,6 +20,32 @@
   margin-bottom: 6px;
 }
 
+.labelRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.labelRow .label {
+  margin-bottom: 0;
+}
+
+.clearBtn {
+  background: none;
+  border: none;
+  color: #4f46e5;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.clearBtn:hover {
+  color: #4f46e5;
+}
+
 .labelTop {
   display: block;
   font-weight: 600;
@@ -125,7 +151,7 @@
   width: 100%;
 }
 
-.addRow > * {
+.addRow>* {
   min-width: 0;
 }
 
@@ -228,7 +254,7 @@
   width: 100%;
 }
 
-.postageRow > * {
+.postageRow>* {
   min-width: 0;
 }
 
